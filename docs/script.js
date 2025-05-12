@@ -4,16 +4,33 @@ const branch = "main";
 const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
 
 let fullTree = {};
+let allPaths = []; // גם קבצים וגם תיקיות
 let history = [];
 
 fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`)
   .then(res => res.json())
   .then(data => {
-    const files = data.tree.filter(item => item.type === "blob" && item.path.endsWith(".cs"));
-    fullTree = buildTree(files.map(f => f.path));
+    const treeItems = data.tree.filter(item => item.type === "blob" || item.type === "tree");
+    allPaths = treeItems.map(item => item.path);
+    const filesOnly = treeItems.filter(item => item.type === "blob" && item.path.endsWith(".cs"));
+    fullTree = buildTree(filesOnly.map(f => f.path));
     renderLevel(fullTree, "Click to view solutions");
   });
 
+  document.getElementById("searchInput").addEventListener("input", function () {
+    const query = this.value.trim().toLowerCase();
+    if (query === "") {
+      renderLevel(fullTree, "Click to view solutions");
+    } else {
+      // שלוף רק פריטים ששמם (ולא כל הנתיב) תואם לחיפוש
+      const results = allPaths.filter(path => {
+        const parts = path.split("/");
+        const name = parts[parts.length - 1];
+        return name.toLowerCase().includes(query);
+      });
+      renderFlatResults(results, "Search results");
+    }
+  });
 function buildTree(paths) {
   const root = {};
   for (const path of paths) {
@@ -53,6 +70,59 @@ function renderLevel(level, title) {
   }
 }
 
+function renderFlatResults(paths, title) {
+    const container = document.getElementById("container");
+    container.innerHTML = "";
+    document.getElementById("codeViewer").innerHTML = "";
+    document.getElementById("pathTitle").innerText = title;
+    document.getElementById("backBtn").style.display = "inline-block";
+  
+    if (paths.length === 0) {
+      container.innerHTML = "<p>No results found</p>";
+      return;
+    }
+  
+    for (const path of paths) {
+      const parts = path.split("/");
+      const name = parts[parts.length - 1].replace(/\.cs$/, "");
+  
+      const card = document.createElement("div");
+      card.className = "card";
+      card.innerText = name;
+  
+      card.onclick = () => {
+        if (path.endsWith(".cs")) {
+          loadFile(path);
+        } else {
+          const subtree = getSubTree(fullTree, path.split("/"));
+          if (subtree) {
+            history.push({ level: fullTree, title: "Click to view solutions" });
+            renderLevel(subtree, name);
+          } else {
+            alert("Folder not found.");
+          }
+        }
+      };
+  
+      container.appendChild(card);
+    }
+  }
+  
+  // פונקציה שמקבלת fullTree ונתיב, ומחזירה את הסאב-עץ המתאים
+  function getSubTree(tree, parts) {
+    let curr = tree;
+    for (const part of parts) {
+      if (curr[part] && typeof curr[part] === "object") {
+        curr = curr[part];
+      } else {
+        return null;
+      }
+    }
+    return curr;
+  }
+  
+  
+
 function loadFile(path) {
   const url = baseUrl + path;
   fetch(url)
@@ -70,11 +140,19 @@ function loadFile(path) {
 
 document.getElementById("backBtn").onclick = () => {
   const prev = history.pop();
-  renderLevel(prev.level, prev.title);
+  if (prev) {
+    renderLevel(prev.level, prev.title);
+  } else {
+    renderLevel(fullTree, "Click to view solutions");
+  }
 };
 
 function escapeHtml(text) {
   return text.replace(/[&<>"']/g, m => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
   })[m]);
 }
