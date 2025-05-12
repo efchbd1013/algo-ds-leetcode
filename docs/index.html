@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>LeetCode Solutions – efrat-dev</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      height: 100vh;
+      margin: 0;
+    }
+    #sidebar {
+      width: 300px;
+      background: #f4f4f4;
+      padding: 1rem;
+      overflow-y: auto;
+      border-right: 1px solid #ddd;
+    }
+    #content {
+      flex: 1;
+      padding: 1rem;
+      overflow: auto;
+    }
+    ul {
+      list-style-type: none;
+      padding-left: 1rem;
+    }
+    li {
+      cursor: pointer;
+      margin: 0.2rem 0;
+    }
+    pre {
+      background: #1e1e1e;
+      color: #dcdcdc;
+      padding: 1rem;
+      border-radius: 8px;
+      overflow-x: auto;
+    }
+  </style>
+  <!-- Highlight.js -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script>hljs.highlightAll();</script>
+</head>
+<body>
+  <div id="sidebar"><strong>📁 תפריט קבצים</strong><div id="tree"></div></div>
+  <div id="content"><em>בחר קובץ מהתפריט כדי לצפות בקוד.</em></div>
+
+  <script>
+    const owner = "efrat-dev";
+    const repo = "algo-ds-leetcode";
+    const branch = "main";
+    const baseUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/`;
+
+    fetch(`https://api.github.com/repos/${owner}/${repo}/git/trees/${branch}?recursive=1`)
+      .then(res => res.json())
+      .then(data => {
+        const files = data.tree.filter(item => item.type === "blob" && item.path.endsWith(".cs"));
+        const treeData = buildTree(files.map(f => f.path));
+        renderTree(treeData, document.getElementById("tree"));
+      });
+
+    function buildTree(paths) {
+      const root = {};
+      for (const path of paths) {
+        const parts = path.split("/");
+        let curr = root;
+        for (let i = 0; i < parts.length; i++) {
+          const part = parts[i];
+          if (!curr[part]) curr[part] = (i === parts.length - 1) ? path : {};
+          curr = curr[part];
+        }
+      }
+      return root;
+    }
+
+    function renderTree(tree, container) {
+      const ul = document.createElement("ul");
+      for (const key in tree) {
+        const li = document.createElement("li");
+        if (typeof tree[key] === "string") {
+          li.textContent = key;
+          li.onclick = () => loadFile(tree[key]);
+        } else {
+          li.innerHTML = `📁 ${key}`;
+          renderTree(tree[key], li);
+        }
+        ul.appendChild(li);
+      }
+      container.appendChild(ul);
+    }
+
+    function loadFile(path) {
+      const url = baseUrl + path;
+      fetch(url)
+        .then(res => res.text())
+        .then(code => {
+          document.getElementById("content").innerHTML = `
+            <h3>${path}</h3>
+            <pre><code class="language-csharp">${escapeHtml(code)}</code></pre>
+          `;
+          hljs.highlightAll();
+        });
+    }
+
+    function escapeHtml(text) {
+      return text.replace(/[&<>"']/g, m => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+      })[m]);
+    }
+  </script>
+</body>
+</html>
