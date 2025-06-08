@@ -1,28 +1,2281 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>LeetCode Solutions – efrat-dev</title>
-    <link rel="stylesheet" href="style.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
-    />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeMaster Pro - LeetCode Solutions Platform</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #ec4899;
+            --accent: #14b8a6;
+            --dark: #0f172a;
+            --dark-light: #1e293b;
+            --gray: #64748b;
+            --light: #f8fafc;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+            --gradient: linear-gradient(135deg, var(--primary), var(--secondary));
+            --gradient-dark: linear-gradient(135deg, var(--dark), var(--dark-light));
+            --shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--gradient-dark);
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .shape {
+            position: absolute;
+            background: rgba(99, 102, 241, 0.1);
+            border-radius: 50%;
+            animation: float 20s infinite linear;
+        }
+
+        .shape:nth-child(1) { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
+        .shape:nth-child(2) { width: 120px; height: 120px; top: 60%; left: 80%; animation-delay: -5s; }
+        .shape:nth-child(3) { width: 60px; height: 60px; top: 80%; left: 20%; animation-delay: -10s; }
+        .shape:nth-child(4) { width: 100px; height: 100px; top: 30%; left: 70%; animation-delay: -15s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            padding: 2rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 0 30px rgba(99, 102, 241, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 2rem;
+        }
+
+        .stats-bar {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .controls-section {
+            margin-bottom: 3rem;
+        }
+
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto 2rem;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 1rem 1rem 1rem 3rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        #searchInput:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
+        }
+
+        #searchInput::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--gray);
+            font-size: 1.2rem;
+        }
+
+        .filters-row {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .filter-btn, .sort-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .filter-btn:hover, .sort-btn:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active, .sort-btn.active {
+            background: var(--gradient);
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .view-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .view-btn {
+            padding: 0.8rem 1.2rem;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .view-btn:first-child {
+            border-radius: 15px 0 0 15px;
+        }
+
+        .view-btn:last-child {
+            border-radius: 0 15px 15px 0;
+        }
+
+        .view-btn.active {
+            background: var(--gradient);
+            border-color: var(--primary);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb-item {
+            color: var(--gray);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb-item:hover {
+            color: var(--primary);
+        }
+
+        .breadcrumb-separator {
+            color: var(--gray);
+        }
+
+        #backBtn {
+            background: var(--gradient);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+
+        #backBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        #pathTitle {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            background: var(--gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #container {
+            display: grid;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .grid-view {
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        }
+
+        .list-view {
+            grid-template-columns: 1fr;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        .card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .card-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+        }
+
+        .difficulty-badge {
+            padding: 0.3rem 0.8rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .difficulty-easy {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .difficulty-medium {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .difficulty-hard {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        .card-meta {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: var(--gray);
+        }
+
+        .card-description {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--primary);
+            padding: 0.2rem 0.6rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+
+        .list-card {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem;
+        }
+
+        .list-card .card-content {
+            flex: 1;
+        }
+
+        .list-card .difficulty-badge {
+            flex-shrink: 0;
+        }
+
+        #codeViewer {
+            background: var(--dark);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-top: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .code-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .code-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .action-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .action-btn:hover {
+            background: var(--primary);
+            border-color: var(--primary);
+        }
+
+        pre {
+            background: var(--dark-light) !important;
+            border-radius: 15px;
+            padding: 2rem;
+            overflow-x: auto;
+            line-height: 1.6;
+            font-size: 0.95rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left: 4px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--gray);
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-in {
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+
+            .logo {
+                font-size: 2rem;
+            }
+
+            .stats-bar {
+                gap: 1rem;
+            }
+
+            .stat-item {
+                padding: 0.8rem 1.5rem;
+            }
+
+            .filters-row {
+                gap: 0.5rem;
+            }
+
+            .filter-btn, .sort-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .list-card {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+
+            .code-header {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: flex-start;
+            }
+
+            pre {
+                padding: 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        .favorite-btn {
+            background: none;
+            border: none;
+            color: var(--gray);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .favorite-btn:hover,
+        .favorite-btn.favorited {
+            color: var(--secondary);
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+        <div class="shape"></div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo">CodeMaster Pro</div>
+            <div class="subtitle">Advanced LeetCode Solutions Platform by efrat-dev</div>
+            
+            <div class="stats-bar" id="statsBar">
+                <div class="stat-item">
+                    <div class="stat-number" id="totalSolutions">0</div>
+                    <div class="stat-label">Solutions</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="totalProblems">0</div>
+                    <div class="stat-label">Problems</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="completionRate">0%</div>
+                    <div class="stat-label">Completion</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="controls-section">
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" id="searchInput" placeholder="Search solutions, algorithms, data structures..." />
+            </div>
+
+            <div class="filters-row">
+                <button class="filter-btn active" data-filter="all">All</button>
+                <button class="filter-btn" data-filter="easy">Easy</button>
+                <button class="filter-btn" data-filter="medium">Medium</button>
+                <button class="filter-btn" data-filter="hard">Hard</button>
+                <button class="filter-btn" data-filter="favorites">★ Favorites</button>
+            </div>
+
+            <div class="filters-row">
+                <button class="sort-btn active" data-sort="name">Sort by Name</button>
+                <button class="sort-btn" data-sort="difficulty">Sort by Difficulty</button>
+                <button class="sort-btn" data-sort="recent">Recently Added</button>
+                <button class="sort-btn" data-sort="popular">Most Popular</button>
+            </div>
+
+            <div class="view-toggle">
+                <button class="view-btn active" data-view="grid">⊞ Grid</button>
+                <button class="view-btn" data-view="list">☰ List</button>
+            </div>
+        </div>
+
+        <div class="breadcrumb" id="breadcrumb"></div>
+
+        <button id="backBtn" style="display: none;">← Back</button>
+
+        <h2 id="pathTitle">Explore Solutions</h2>
+
+        <div id="container" class="grid-view"></div>
+
+        <div id="codeViewer"></div>
+    </div>
+
     <script>
-      hljs.highlightAll();
-    </script>
-  </head>
-  <body>
-    <h1>LeetCode Solutions</h1>
-    <h2 id="pathTitle">Click to view solutions</h2>
-    <button id="backBtn">⬅ Back</button>
-
-        <!-- Search Box -->
-        <input type="text" id="searchInput" placeholder="Search for a solution..." />
-
-    <div id="container"></div>
-    <div id="codeViewer"></div>
-    <script src="script.js"></script>
-  </body>
+    // CodeMaster Pro - Complete JavaScript Functionality
+    // Advanced LeetCode Solutions Platform
+    
+    class CodeMasterPro {
+        constructor() {
+            this.currentPath = [];
+            this.currentView = 'grid';
+            this.currentFilter = 'all';
+            this.currentSort = 'name';
+            this.searchTerm = '';
+            this.favorites = new Set(JSON.parse(localStorage.getItem('favorites') || '[]'));
+            this.viewHistory = [];
+            
+            this.initializeData();
+            this.initializeElements();
+            this.setupEventListeners();
+            this.updateStats();
+            this.renderContent();
+        }
+    
+        initializeData() {
+            // Sample LeetCode problems data structure
+            this.data = {
+                'Array': {
+                    type: 'category',
+                    problems: {
+                        'Two Sum': {
+                            difficulty: 'easy',
+                            description: 'Given an array of integers nums and an integer target, return indices of the two numbers such that they add up to target.',
+                            tags: ['Array', 'Hash Table'],
+                            solutions: {
+                                'Python': `def twoSum(nums, target):
+        hashmap = {}
+        for i, num in enumerate(nums):
+            complement = target - num
+            if complement in hashmap:
+                return [hashmap[complement], i]
+            hashmap[num] = i
+        return []
+    
+    # Time Complexity: O(n)
+    # Space Complexity: O(n)`,
+                                'JavaScript': `function twoSum(nums, target) {
+        const map = new Map();
+        for (let i = 0; i < nums.length; i++) {
+            const complement = target - nums[i];
+            if (map.has(complement)) {
+                return [map.get(complement), i];
+            }
+            map.set(nums[i], i);
+        }
+        return [];
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(n)`,
+                                'Java': `public int[] twoSum(int[] nums, int target) {
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i = 0; i < nums.length; i++) {
+            int complement = target - nums[i];
+            if (map.containsKey(complement)) {
+                return new int[] { map.get(complement), i };
+            }
+            map.put(nums[i], i);
+        }
+        return new int[0];
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(n)`
+                            },
+                            popularity: 95,
+                            dateAdded: '2024-01-15'
+                        },
+                        'Best Time to Buy and Sell Stock': {
+                            difficulty: 'easy',
+                            description: 'You are given an array prices where prices[i] is the price of a given stock on the ith day. You want to maximize your profit.',
+                            tags: ['Array', 'Dynamic Programming'],
+                            solutions: {
+                                'Python': `def maxProfit(prices):
+        if not prices:
+            return 0
+        
+        min_price = prices[0]
+        max_profit = 0
+        
+        for price in prices[1:]:
+            if price < min_price:
+                min_price = price
+            elif price - min_price > max_profit:
+                max_profit = price - min_price
+        
+        return max_profit
+    
+    # Time Complexity: O(n)
+    # Space Complexity: O(1)`,
+                                'JavaScript': `function maxProfit(prices) {
+        if (prices.length === 0) return 0;
+        
+        let minPrice = prices[0];
+        let maxProfit = 0;
+        
+        for (let i = 1; i < prices.length; i++) {
+            if (prices[i] < minPrice) {
+                minPrice = prices[i];
+            } else if (prices[i] - minPrice > maxProfit) {
+                maxProfit = prices[i] - minPrice;
+            }
+        }
+        
+        return maxProfit;
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(1)`
+                            },
+                            popularity: 88,
+                            dateAdded: '2024-01-20'
+                        },
+                        'Contains Duplicate': {
+                            difficulty: 'easy',
+                            description: 'Given an integer array nums, return true if any value appears at least twice in the array.',
+                            tags: ['Array', 'Hash Table', 'Sorting'],
+                            solutions: {
+                                'Python': `def containsDuplicate(nums):
+        return len(nums) != len(set(nums))
+    
+    # Alternative solution with hash table
+    def containsDuplicate(nums):
+        seen = set()
+        for num in nums:
+            if num in seen:
+                return True
+            seen.add(num)
+        return False
+    
+    # Time Complexity: O(n)
+    # Space Complexity: O(n)`,
+                                'JavaScript': `function containsDuplicate(nums) {
+        return new Set(nums).size !== nums.length;
+    }
+    
+    // Alternative solution
+    function containsDuplicate(nums) {
+        const seen = new Set();
+        for (const num of nums) {
+            if (seen.has(num)) {
+                return true;
+            }
+            seen.add(num);
+        }
+        return false;
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(n)`
+                            },
+                            popularity: 82,
+                            dateAdded: '2024-01-25'
+                        }
+                    }
+                },
+                'String': {
+                    type: 'category',
+                    problems: {
+                        'Valid Anagram': {
+                            difficulty: 'easy',
+                            description: 'Given two strings s and t, return true if t is an anagram of s, and false otherwise.',
+                            tags: ['Hash Table', 'String', 'Sorting'],
+                            solutions: {
+                                'Python': `def isAnagram(s, t):
+        if len(s) != len(t):
+            return False
+        
+        char_count = {}
+        
+        for char in s:
+            char_count[char] = char_count.get(char, 0) + 1
+        
+        for char in t:
+            if char not in char_count:
+                return False
+            char_count[char] -= 1
+            if char_count[char] == 0:
+                del char_count[char]
+        
+        return len(char_count) == 0
+    
+    # Pythonic solution
+    def isAnagram(s, t):
+        return sorted(s) == sorted(t)
+    
+    # Time Complexity: O(n log n) for sorting, O(n) for hash table
+    # Space Complexity: O(n)`,
+                                'JavaScript': `function isAnagram(s, t) {
+        if (s.length !== t.length) return false;
+        
+        const charCount = {};
+        
+        for (const char of s) {
+            charCount[char] = (charCount[char] || 0) + 1;
+        }
+        
+        for (const char of t) {
+            if (!charCount[char]) return false;
+            charCount[char]--;
+        }
+        
+        return true;
+    }
+    
+    // Alternative solution
+    function isAnagram(s, t) {
+        return s.split('').sort().join('') === t.split('').sort().join('');
+    }
+    
+    // Time Complexity: O(n log n) for sorting, O(n) for hash table
+    // Space Complexity: O(n)`
+                            },
+                            popularity: 85,
+                            dateAdded: '2024-02-01'
+                        },
+                        'Valid Palindrome': {
+                            difficulty: 'easy',
+                            description: 'A phrase is a palindrome if, after converting all uppercase letters into lowercase letters and removing all non-alphanumeric characters, it reads the same forward and backward.',
+                            tags: ['Two Pointers', 'String'],
+                            solutions: {
+                                'Python': `def isPalindrome(s):
+        # Clean and convert to lowercase
+        cleaned = ''.join(char.lower() for char in s if char.isalnum())
+        
+        # Two pointers approach
+        left, right = 0, len(cleaned) - 1
+        
+        while left < right:
+            if cleaned[left] != cleaned[right]:
+                return False
+            left += 1
+            right -= 1
+        
+        return True
+    
+    # Pythonic one-liner
+    def isPalindrome(s):
+        cleaned = ''.join(char.lower() for char in s if char.isalnum())
+        return cleaned == cleaned[::-1]
+    
+    # Time Complexity: O(n)
+    # Space Complexity: O(n)`,
+                                'JavaScript': `function isPalindrome(s) {
+        const cleaned = s.toLowerCase().replace(/[^a-z0-9]/g, '');
+        
+        let left = 0;
+        let right = cleaned.length - 1;
+        
+        while (left < right) {
+            if (cleaned[left] !== cleaned[right]) {
+                return false;
+            }
+            left++;
+            right--;
+        }
+        
+        return true;
+    }
+    
+    // Alternative solution
+    function isPalindrome(s) {
+        const cleaned = s.toLowerCase().replace(/[^a-z0-9]/g, '');
+        return cleaned === cleaned.split('').reverse().join('');
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(n)`
+                            },
+                            popularity: 78,
+                            dateAdded: '2024-02-05'
+                        },
+                        'Longest Common Prefix': {
+                            difficulty: 'easy',
+                            description: 'Write a function to find the longest common prefix string amongst an array of strings.',
+                            tags: ['String', 'Trie'],
+                            solutions: {
+                                'Python': `def longestCommonPrefix(strs):
+        if not strs:
+            return ""
+        
+        # Find the shortest string length
+        min_len = min(len(s) for s in strs)
+        
+        for i in range(min_len):
+            char = strs[0][i]
+            for string in strs[1:]:
+                if string[i] != char:
+                    return strs[0][:i]
+        
+        return strs[0][:min_len]
+    
+    # Alternative vertical scanning
+    def longestCommonPrefix(strs):
+        if not strs:
+            return ""
+        
+        for i, char in enumerate(strs[0]):
+            for string in strs[1:]:
+                if i >= len(string) or string[i] != char:
+                    return strs[0][:i]
+        
+        return strs[0]
+    
+    # Time Complexity: O(S) where S is sum of all characters
+    # Space Complexity: O(1)`,
+                                'JavaScript': `function longestCommonPrefix(strs) {
+        if (strs.length === 0) return "";
+        
+        for (let i = 0; i < strs[0].length; i++) {
+            const char = strs[0][i];
+            for (let j = 1; j < strs.length; j++) {
+                if (i >= strs[j].length || strs[j][i] !== char) {
+                    return strs[0].substring(0, i);
+                }
+            }
+        }
+        
+        return strs[0];
+    }
+    
+    // Alternative solution using reduce
+    function longestCommonPrefix(strs) {
+        if (strs.length === 0) return "";
+        
+        return strs.reduce((prefix, str) => {
+            while (str.indexOf(prefix) !== 0) {
+                prefix = prefix.substring(0, prefix.length - 1);
+                if (prefix === "") return "";
+            }
+            return prefix;
+        });
+    }
+    
+    // Time Complexity: O(S) where S is sum of all characters
+    // Space Complexity: O(1)`
+                            },
+                            popularity: 72,
+                            dateAdded: '2024-02-10'
+                        }
+                    }
+                },
+                'Linked List': {
+                    type: 'category',
+                    problems: {
+                        'Reverse Linked List': {
+                            difficulty: 'easy',
+                            description: 'Given the head of a singly linked list, reverse the list, and return the reversed list.',
+                            tags: ['Linked List', 'Recursion'],
+                            solutions: {
+                                'Python': `# Definition for singly-linked list.
+    class ListNode:
+        def __init__(self, val=0, next=None):
+            self.val = val
+            self.next = next
+    
+    def reverseList(head):
+        prev = None
+        current = head
+        
+        while current:
+            next_temp = current.next
+            current.next = prev
+            prev = current
+            current = next_temp
+        
+        return prev
+    
+    # Recursive solution
+    def reverseList(head):
+        if not head or not head.next:
+            return head
+        
+        reversed_head = reverseList(head.next)
+        head.next.next = head
+        head.next = None
+        
+        return reversed_head
+    
+    # Time Complexity: O(n)
+    # Space Complexity: O(1) iterative, O(n) recursive`,
+                                'JavaScript': `// Definition for singly-linked list.
+    function ListNode(val, next) {
+        this.val = (val===undefined ? 0 : val);
+        this.next = (next===undefined ? null : next);
+    }
+    
+    function reverseList(head) {
+        let prev = null;
+        let current = head;
+        
+        while (current !== null) {
+            const nextTemp = current.next;
+            current.next = prev;
+            prev = current;
+            current = nextTemp;
+        }
+        
+        return prev;
+    }
+    
+    // Recursive solution
+    function reverseList(head) {
+        if (head === null || head.next === null) {
+            return head;
+        }
+        
+        const reversedHead = reverseList(head.next);
+        head.next.next = head;
+        head.next = null;
+        
+        return reversedHead;
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(1) iterative, O(n) recursive`
+                            },
+                            popularity: 90,
+                            dateAdded: '2024-02-15'
+                        },
+                        'Merge Two Sorted Lists': {
+                            difficulty: 'easy',
+                            description: 'You are given the heads of two sorted linked lists list1 and list2. Merge the two lists into one sorted list.',
+                            tags: ['Linked List', 'Recursion'],
+                            solutions: {
+                                'Python': `def mergeTwoLists(list1, list2):
+        dummy = ListNode(0)
+        current = dummy
+        
+        while list1 and list2:
+            if list1.val <= list2.val:
+                current.next = list1
+                list1 = list1.next
+            else:
+                current.next = list2
+                list2 = list2.next
+            current = current.next
+        
+        # Attach remaining nodes
+        current.next = list1 or list2
+        
+        return dummy.next
+    
+    # Recursive solution
+    def mergeTwoLists(list1, list2):
+        if not list1:
+            return list2
+        if not list2:
+            return list1
+        
+        if list1.val <= list2.val:
+            list1.next = mergeTwoLists(list1.next, list2)
+            return list1
+        else:
+            list2.next = mergeTwoLists(list1, list2.next)
+            return list2
+    
+    # Time Complexity: O(n + m)
+    # Space Complexity: O(1) iterative, O(n + m) recursive`,
+                                'JavaScript': `function mergeTwoLists(list1, list2) {
+        const dummy = new ListNode(0);
+        let current = dummy;
+        
+        while (list1 !== null && list2 !== null) {
+            if (list1.val <= list2.val) {
+                current.next = list1;
+                list1 = list1.next;
+            } else {
+                current.next = list2;
+                list2 = list2.next;
+            }
+            current = current.next;
+        }
+        
+        // Attach remaining nodes
+        current.next = list1 || list2;
+        
+        return dummy.next;
+    }
+    
+    // Recursive solution
+    function mergeTwoLists(list1, list2) {
+        if (list1 === null) return list2;
+        if (list2 === null) return list1;
+        
+        if (list1.val <= list2.val) {
+            list1.next = mergeTwoLists(list1.next, list2);
+            return list1;
+        } else {
+            list2.next = mergeTwoLists(list1, list2.next);
+            return list2;
+        }
+    }
+    
+    // Time Complexity: O(n + m)
+    // Space Complexity: O(1) iterative, O(n + m) recursive`
+                            },
+                            popularity: 87,
+                            dateAdded: '2024-02-20'
+                        }
+                    }
+                },
+                'Binary Tree': {
+                    type: 'category',
+                    problems: {
+                        'Maximum Depth of Binary Tree': {
+                            difficulty: 'easy',
+                            description: 'Given the root of a binary tree, return its maximum depth.',
+                            tags: ['Tree', 'Depth-First Search', 'Breadth-First Search', 'Binary Tree'],
+                            solutions: {
+                                'Python': `# Definition for a binary tree node.
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+    
+    def maxDepth(root):
+        if not root:
+            return 0
+        
+        left_depth = maxDepth(root.left)
+        right_depth = maxDepth(root.right)
+        
+        return max(left_depth, right_depth) + 1
+    
+    # Iterative BFS solution
+    from collections import deque
+    
+    def maxDepth(root):
+        if not root:
+            return 0
+        
+        queue = deque([(root, 1)])
+        max_depth = 0
+        
+        while queue:
+            node, depth = queue.popleft()
+            max_depth = max(max_depth, depth)
+            
+            if node.left:
+                queue.append((node.left, depth + 1))
+            if node.right:
+                queue.append((node.right, depth + 1))
+        
+        return max_depth
+    
+    # Time Complexity: O(n)
+    # Space Complexity: O(h) where h is height of tree`,
+                                'JavaScript': `// Definition for a binary tree node.
+    function TreeNode(val, left, right) {
+        this.val = (val===undefined ? 0 : val);
+        this.left = (left===undefined ? null : left);
+        this.right = (right===undefined ? null : right);
+    }
+    
+    function maxDepth(root) {
+        if (root === null) return 0;
+        
+        const leftDepth = maxDepth(root.left);
+        const rightDepth = maxDepth(root.right);
+        
+        return Math.max(leftDepth, rightDepth) + 1;
+    }
+    
+    // Iterative BFS solution
+    function maxDepth(root) {
+        if (root === null) return 0;
+        
+        const queue = [[root, 1]];
+        let maxDepth = 0;
+        
+        while (queue.length > 0) {
+            const [node, depth] = queue.shift();
+            maxDepth = Math.max(maxDepth, depth);
+            
+            if (node.left) queue.push([node.left, depth + 1]);
+            if (node.right) queue.push([node.right, depth + 1]);
+        }
+        
+        return maxDepth;
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(h) where h is height of tree`
+                            },
+                            popularity: 92,
+                            dateAdded: '2024-03-01'
+                        },
+                        'Same Tree': {
+                            difficulty: 'easy',
+                            description: 'Given the roots of two binary trees p and q, write a function to check if they are the same or not.',
+                            tags: ['Tree', 'Depth-First Search', 'Binary Tree'],
+                            solutions: {
+                                'Python': `def isSameTree(p, q):
+        # Both are None
+        if not p and not q:
+            return True
+        
+        # One is None, the other is not
+        if not p or not q:
+            return False
+        
+        # Values are different
+        if p.val != q.val:
+            return False
+        
+        # Recursively check subtrees
+        return isSameTree(p.left, q.left) and isSameTree(p.right, q.right)
+    
+    # Iterative solution using stack
+    def isSameTree(p, q):
+        stack = [(p, q)]
+        
+        while stack:
+            node1, node2 = stack.pop()
+            
+            if not node1 and not node2:
+                continue
+            
+            if not node1 or not node2 or node1.val != node2.val:
+                return False
+            
+            stack.append((node1.left, node2.left))
+            stack.append((node1.right, node2.right))
+        
+        return True
+    
+    # Time Complexity: O(n)
+    # Space Complexity: O(h) where h is height of tree`,
+                                'JavaScript': `function isSameTree(p, q) {
+        // Both are null
+        if (p === null && q === null) return true;
+        
+        // One is null, the other is not
+        if (p === null || q === null) return false;
+        
+        // Values are different
+        if (p.val !== q.val) return false;
+        
+        // Recursively check subtrees
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
+    }
+    
+    // Iterative solution using stack
+    function isSameTree(p, q) {
+        const stack = [[p, q]];
+        
+        while (stack.length > 0) {
+            const [node1, node2] = stack.pop();
+            
+            if (node1 === null && node2 === null) continue;
+            
+            if (node1 === null || node2 === null || node1.val !== node2.val) {
+                return false;
+            }
+            
+            stack.push([node1.left, node2.left]);
+            stack.push([node1.right, node2.right]);
+        }
+        
+        return true;
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(h) where h is height of tree`
+                            },
+                            popularity: 84,
+                            dateAdded: '2024-03-05'
+                        }
+                    }
+                },
+                'Dynamic Programming': {
+                    type: 'category',
+                    problems: {
+                        'Climbing Stairs': {
+                            difficulty: 'easy',
+                            description: 'You are climbing a staircase. It takes n steps to reach the top. Each time you can either climb 1 or 2 steps.',
+                            tags: ['Math', 'Dynamic Programming', 'Memoization'],
+                            solutions: {
+                                'Python': `def climbStairs(n):
+        if n <= 2:
+            return n
+        
+        prev2, prev1 = 1, 2
+        
+        for i in range(3, n + 1):
+            current = prev1 + prev2
+            prev2, prev1 = prev1, current
+        
+        return prev1
+    
+    # Recursive with memoization
+    def climbStairs(n, memo={}):
+        if n in memo:
+            return memo[n]
+        
+        if n <= 2:
+            return n
+        
+        memo[n] = climbStairs(n - 1, memo) + climbStairs(n - 2, memo)
+        return memo[n]
+    
+    # Dynamic Programming approach
+    def climbStairs(n):
+        if n <= 2:
+            return n
+        
+        dp = [0] * (n + 1)
+        dp[1], dp[2] = 1, 2
+        
+        for i in range(3, n + 1):
+            dp[i] = dp[i - 1] + dp[i - 2]
+        
+        return dp[n]
+    
+    # Time Complexity: O(n)
+    # Space Complexity: O(1) optimized, O(n) DP array`,
+                                'JavaScript': `function climbStairs(n) {
+        if (n <= 2) return n;
+        
+        let prev2 = 1, prev1 = 2;
+        
+        for (let i = 3; i <= n; i++) {
+            const current = prev1 + prev2;
+            prev2 = prev1;
+            prev1 = current;
+        }
+        
+        return prev1;
+    }
+    
+    // Recursive with memoization
+    function climbStairs(n, memo = {}) {
+        if (n in memo) return memo[n];
+        
+        if (n <= 2) return n;
+        
+        memo[n] = climbStairs(n - 1, memo) + climbStairs(n - 2, memo);
+        return memo[n];
+    }
+    
+    // Dynamic Programming approach
+    function climbStairs(n) {
+        if (n <= 2) return n;
+        
+        const dp = new Array(n + 1);
+        dp[1] = 1;
+        dp[2] = 2;
+        
+        for (let i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        
+        return dp[n];
+    }
+    
+    // Time Complexity: O(n)
+    // Space Complexity: O(1) optimized, O(n) DP array`
+                            },
+                            popularity: 89,
+                            dateAdded: '2024-03-10'
+                        }
+                    }
+                }
+            };
+        }
+    
+        initializeElements() {
+            this.elements = {
+                container: document.getElementById('container'),
+                searchInput: document.getElementById('searchInput'),
+                filterBtns: document.querySelectorAll('.filter-btn'),
+                sortBtns: document.querySelectorAll('.sort-btn'),
+                viewBtns: document.querySelectorAll('.view-btn'),
+                backBtn: document.getElementById('backBtn'),
+                breadcrumb: document.getElementById('breadcrumb'),
+                pathTitle: document.getElementById('pathTitle'),
+                codeViewer: document.getElementById('codeViewer'),
+                totalSolutions: document.getElementById('totalSolutions'),
+                totalProblems: document.getElementById('totalProblems'),
+                completionRate: document.getElementById('completionRate')
+            };
+        }
+    
+        setupEventListeners() {
+            // Search functionality
+            this.elements.searchInput.addEventListener('input', (e) => {
+                this.searchTerm = e.target.value.toLowerCase();
+                this.renderContent();
+            });
+    
+            // Filter buttons
+            this.elements.filterBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    this.elements.filterBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.currentFilter = btn.dataset.filter;
+                    this.renderContent();
+                });
+            });
+    
+            // Sort buttons
+            this.elements.sortBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    this.elements.sortBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.currentSort = btn.dataset.sort;
+                    this.renderContent();
+                });
+            });
+    
+            // View toggle buttons
+            this.elements.viewBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    this.elements.viewBtns.forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    this.currentView = btn.dataset.view;
+                    this.updateViewMode();
+                });
+            });
+    
+            // Back button
+            this.elements.backBtn.addEventListener('click', () => {
+                this.navigateBack();
+            });
+    
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    if (this.currentPath.length > 0) {
+                        this.navigateBack();
+                    }
+                } else if (e.key === '/' && e.ctrlKey) {
+                    e.preventDefault();
+                    this.elements.searchInput.focus();
+                }
+            });
+        }
+    
+        updateStats() {
+            let totalSolutions = 0;
+            let totalProblems = 0;
+    
+            Object.values(this.data).forEach(category => {
+                if (category.problems) {
+                    Object.values(category.problems).forEach(problem => {
+                        totalProblems++;
+                        totalSolutions += Object.keys(problem.solutions || {}).length;
+                    });
+                }
+            });
+    
+            const completionRate = totalProblems > 0 ? Math.round((totalSolutions / (totalProblems * 3)) * 100) : 0;
+    
+            this.animateNumber(this.elements.totalSolutions, totalSolutions);
+            this.animateNumber(this.elements.totalProblems, totalProblems);
+            this.animatePercentage(this.elements.completionRate, completionRate);
+        }
+    
+        animateNumber(element, target) {
+            const start = parseInt(element.textContent) || 0;
+            const duration = 1000;
+            const startTime = performance.now();
+    
+            const animate = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.round(start + (target - start) * this.easeOutCubic(progress));
+                element.textContent = current;
+    
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            };
+    
+            requestAnimationFrame(animate);
+        }
+    
+        animatePercentage(element, target) {
+            const start = parseInt(element.textContent) || 0;
+            const duration = 1000;
+            const startTime = performance.now();
+    
+            const animate = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.round(start + (target - start) * this.easeOutCubic(progress));
+                element.textContent = current + '%';
+    
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            };
+    
+            requestAnimationFrame(animate);
+        }
+    
+        easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+    
+        updateViewMode() {
+            this.elements.container.className = this.currentView === 'grid' ? 'grid-view' : 'list-view';
+            this.renderContent();
+        }
+    
+        renderContent() {
+            const currentData = this.getCurrentData();
+            this.updateBreadcrumb();
+            
+            if (this.isViewingProblem()) {
+                this.renderProblemView(currentData);
+            } else if (this.isViewingCategory()) {
+                this.renderProblemsView(currentData);
+            } else {
+                this.renderCategoriesView();
+            }
+        }
+    
+        getCurrentData() {
+            if (this.currentPath.length === 0) {
+                return this.data;
+            }
+            
+            let current = this.data;
+            for (const pathItem of this.currentPath) {
+                current = current[pathItem];
+                if (current && current.problems) {
+                    current = current.problems;
+                }
+            }
+            
+            return current;
+        }
+    
+        isViewingProblem() {
+            return this.currentPath.length === 2;
+        }
+    
+        isViewingCategory() {
+            return this.currentPath.length === 1;
+        }
+    
+        renderCategoriesView() {
+            this.elements.pathTitle.textContent = 'Explore Solutions';
+            this.elements.backBtn.style.display = 'none';
+            this.elements.codeViewer.style.display = 'none';
+            
+            const categories = Object.keys(this.data);
+            const filteredCategories = this.filterCategories(categories);
+            const sortedCategories = this.sortCategories(filteredCategories);
+            
+            this.elements.container.innerHTML = '';
+            
+            if (sortedCategories.length === 0) {
+                this.renderNoResults();
+                return;
+            }
+            
+            sortedCategories.forEach((category, index) => {
+                const categoryData = this.data[category];
+                const problemCount = Object.keys(categoryData.problems || {}).length;
+                const card = this.createCategoryCard(category, problemCount, index);
+                this.elements.container.appendChild(card);
+            });
+        }
+    
+        renderProblemsView(problems) {
+            const categoryName = this.currentPath[0];
+            this.elements.pathTitle.textContent = `${categoryName} Problems`;
+            this.elements.backBtn.style.display = 'block';
+            this.elements.codeViewer.style.display = 'none';
+            
+            const problemNames = Object.keys(problems || {});
+            const filteredProblems = this.filterProblems(problemNames, problems);
+            const sortedProblems = this.sortProblems(filteredProblems, problems);
+            
+            this.elements.container.innerHTML = '';
+            
+            if (sortedProblems.length === 0) {
+                this.renderNoResults();
+                return;
+            }
+            
+            sortedProblems.forEach((problemName, index) => {
+                const problemData = problems[problemName];
+                const card = this.createProblemCard(problemName, problemData, index);
+                this.elements.container.appendChild(card);
+            });
+        }
+    
+        renderProblemView(problemData) {
+            const problemName = this.currentPath[1];
+            this.elements.pathTitle.textContent = problemName;
+            this.elements.backBtn.style.display = 'block';
+            this.elements.container.style.display = 'none';
+            this.elements.codeViewer.style.display = 'block';
+            
+            this.renderCodeViewer(problemName, problemData);
+        }
+    
+        renderCodeViewer(problemName, problemData) {
+            const languages = Object.keys(problemData.solutions || {});
+            const defaultLanguage = languages[0] || 'Python';
+            
+            this.elements.codeViewer.innerHTML = `
+                <div class="code-header">
+                    <div>
+                        <h3 class="code-title">${problemName}</h3>
+                        <div class="difficulty-badge difficulty-${problemData.difficulty}">
+                            ${problemData.difficulty.toUpperCase()}
+                        </div>
+                    </div>
+                    <div class="code-actions">
+                        <select id="languageSelect" class="action-btn">
+                            ${languages.map(lang => `<option value="${lang}">${lang}</option>`).join('')}
+                        </select>
+                        <button class="action-btn tooltip" data-tooltip="Copy to clipboard" onclick="codeMaster.copyCode()">
+                            📋 Copy
+                        </button>
+                        <button class="action-btn tooltip favorite-btn ${this.favorites.has(problemName) ? 'favorited' : ''}" 
+                                data-tooltip="Add to favorites" onclick="codeMaster.toggleFavorite('${problemName}')">
+                            ★
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="problem-description">
+                    <p>${problemData.description}</p>
+                    <div class="card-tags">
+                        ${problemData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                </div>
+                
+                <pre><code id="codeBlock" class="language-${defaultLanguage.toLowerCase()}">${problemData.solutions[defaultLanguage]}</code></pre>
+            `;
+            
+            // Setup language selector
+            const languageSelect = document.getElementById('languageSelect');
+            languageSelect.addEventListener('change', (e) => {
+                const selectedLang = e.target.value;
+                const codeBlock = document.getElementById('codeBlock');
+                codeBlock.textContent = problemData.solutions[selectedLang];
+                codeBlock.className = `language-${selectedLang.toLowerCase()}`;
+                hljs.highlightElement(codeBlock);
+            });
+            
+            // Highlight initial code
+            const codeBlock = document.getElementById('codeBlock');
+            hljs.highlightElement(codeBlock);
+        }
+    
+        createCategoryCard(categoryName, problemCount, index) {
+            const card = document.createElement('div');
+            card.className = `card fade-in ${this.currentView === 'list' ? 'list-card' : ''}`;
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            const difficultyDistribution = this.getCategoryDifficultyDistribution(categoryName);
+            
+            card.innerHTML = `
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3 class="card-title">${categoryName}</h3>
+                        <div class="card-meta">
+                            <span>📚 ${problemCount} Problems</span>
+                        </div>
+                    </div>
+                    <div class="card-description">
+                        Master ${categoryName.toLowerCase()} algorithms and data structures with comprehensive solutions and explanations.
+                    </div>
+                    <div class="difficulty-distribution">
+                        <div class="difficulty-stats">
+                            <span class="stat-item">🟢 ${difficultyDistribution.easy} Easy</span>
+                            <span class="stat-item">🟡 ${difficultyDistribution.medium} Medium</span>
+                            <span class="stat-item">🔴 ${difficultyDistribution.hard} Hard</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                this.navigateToCategory(categoryName);
+            });
+            
+            return card;
+        }
+    
+        createProblemCard(problemName, problemData, index) {
+            const card = document.createElement('div');
+            card.className = `card fade-in ${this.currentView === 'list' ? 'list-card' : ''}`;
+            card.style.animationDelay = `${index * 0.1}s`;
+            
+            const solutionLanguages = Object.keys(problemData.solutions || {});
+            const isFavorited = this.favorites.has(problemName);
+            
+            card.innerHTML = `
+                <div class="card-content">
+                    <div class="card-header">
+                        <h3 class="card-title">${problemName}</h3>
+                        <div class="card-actions">
+                            <button class="favorite-btn ${isFavorited ? 'favorited' : ''}" 
+                                    onclick="event.stopPropagation(); codeMaster.toggleFavorite('${problemName}')">
+                                ★
+                            </button>
+                            <div class="difficulty-badge difficulty-${problemData.difficulty}">
+                                ${problemData.difficulty.toUpperCase()}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-meta">
+                        <span>💻 ${solutionLanguages.length} Solutions</span>
+                        <span>📊 ${problemData.popularity}% Popular</span>
+                        <span>📅 ${this.formatDate(problemData.dateAdded)}</span>
+                    </div>
+                    <div class="card-description">
+                        ${problemData.description}
+                    </div>
+                    <div class="card-tags">
+                        ${problemData.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                    </div>
+                    <div class="solution-languages">
+                        ${solutionLanguages.map(lang => `<span class="language-tag">${lang}</span>`).join('')}
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                this.navigateToProblem(problemName);
+            });
+            
+            return card;
+        }
+    
+        getCategoryDifficultyDistribution(categoryName) {
+            const problems = this.data[categoryName].problems || {};
+            const distribution = { easy: 0, medium: 0, hard: 0 };
+            
+            Object.values(problems).forEach(problem => {
+                distribution[problem.difficulty]++;
+            });
+            
+            return distribution;
+        }
+    
+        filterCategories(categories) {
+            if (!this.searchTerm) return categories;
+            
+            return categories.filter(category => 
+                category.toLowerCase().includes(this.searchTerm)
+            );
+        }
+    
+        filterProblems(problemNames, problems) {
+            let filtered = problemNames;
+            
+            // Apply search filter
+            if (this.searchTerm) {
+                filtered = filtered.filter(name => {
+                    const problem = problems[name];
+                    return (
+                        name.toLowerCase().includes(this.searchTerm) ||
+                        problem.description.toLowerCase().includes(this.searchTerm) ||
+                        problem.tags.some(tag => tag.toLowerCase().includes(this.searchTerm))
+                    );
+                });
+            }
+            
+            // Apply difficulty filter
+            if (this.currentFilter !== 'all' && this.currentFilter !== 'favorites') {
+                filtered = filtered.filter(name => 
+                    problems[name].difficulty === this.currentFilter
+                );
+            }
+            
+            // Apply favorites filter
+            if (this.currentFilter === 'favorites') {
+                filtered = filtered.filter(name => this.favorites.has(name));
+            }
+            
+            return filtered;
+        }
+    
+        sortCategories(categories) {
+            return categories.sort((a, b) => {
+                switch (this.currentSort) {
+                    case 'name':
+                        return a.localeCompare(b);
+                    case 'difficulty':
+                        return this.getCategoryAvgDifficulty(b) - this.getCategoryAvgDifficulty(a);
+                    case 'recent':
+                        return this.getCategoryLatestDate(b) - this.getCategoryLatestDate(a);
+                    case 'popular':
+                        return this.getCategoryAvgPopularity(b) - this.getCategoryAvgPopularity(a);
+                    default:
+                        return 0;
+                }
+            });
+        }
+    
+        sortProblems(problemNames, problems) {
+            return problemNames.sort((a, b) => {
+                const problemA = problems[a];
+                const problemB = problems[b];
+                
+                switch (this.currentSort) {
+                    case 'name':
+                        return a.localeCompare(b);
+                    case 'difficulty':
+                        const difficultyOrder = { easy: 1, medium: 2, hard: 3 };
+                        return difficultyOrder[problemA.difficulty] - difficultyOrder[problemB.difficulty];
+                    case 'recent':
+                        return new Date(problemB.dateAdded) - new Date(problemA.dateAdded);
+                    case 'popular':
+                        return problemB.popularity - problemA.popularity;
+                    default:
+                        return 0;
+                }
+            });
+        }
+    
+        getCategoryAvgDifficulty(categoryName) {
+            const problems = Object.values(this.data[categoryName].problems || {});
+            const difficultySum = problems.reduce((sum, problem) => {
+                const difficultyScore = { easy: 1, medium: 2, hard: 3 };
+                return sum + difficultyScore[problem.difficulty];
+            }, 0);
+            return problems.length > 0 ? difficultySum / problems.length : 0;
+        }
+    
+        getCategoryLatestDate(categoryName) {
+            const problems = Object.values(this.data[categoryName].problems || {});
+            const latestDate = problems.reduce((latest, problem) => {
+                const problemDate = new Date(problem.dateAdded);
+                return problemDate > latest ? problemDate : latest;
+            }, new Date(0));
+            return latestDate;
+        }
+    
+        getCategoryAvgPopularity(categoryName) {
+            const problems = Object.values(this.data[categoryName].problems || {});
+            const popularitySum = problems.reduce((sum, problem) => sum + problem.popularity, 0);
+            return problems.length > 0 ? popularitySum / problems.length : 0;
+        }
+    
+        navigateToCategory(categoryName) {
+            this.viewHistory.push([...this.currentPath]);
+            this.currentPath = [categoryName];
+            this.renderContent();
+            this.scrollToTop();
+        }
+    
+        navigateToProblem(problemName) {
+            this.viewHistory.push([...this.currentPath]);
+            if (this.currentPath.length === 1) {
+                this.currentPath.push(problemName);
+            } else {
+                this.currentPath = [this.currentPath[0], problemName];
+            }
+            this.renderContent();
+            this.scrollToTop();
+        }
+    
+        navigateBack() {
+            if (this.currentPath.length > 0) {
+                this.currentPath.pop();
+                this.renderContent();
+                this.scrollToTop();
+                
+                if (this.currentPath.length === 0) {
+                    this.elements.container.style.display = 'grid';
+                }
+            }
+        }
+    
+        updateBreadcrumb() {
+            const breadcrumbItems = ['Home'];
+            
+            if (this.currentPath.length > 0) {
+                breadcrumbItems.push(...this.currentPath);
+            }
+            
+            this.elements.breadcrumb.innerHTML = breadcrumbItems
+                .map((item, index) => {
+                    const isLast = index === breadcrumbItems.length - 1;
+                    const isClickable = !isLast && index > 0;
+                    
+                    return `
+                        <span class="breadcrumb-item ${isClickable ? 'clickable' : ''}" 
+                              ${isClickable ? `onclick="codeMaster.navigateToBreadcrumb(${index})"` : ''}>
+                            ${item}
+                        </span>
+                        ${!isLast ? '<span class="breadcrumb-separator">></span>' : ''}
+                    `;
+                })
+                .join('');
+        }
+    
+        navigateToBreadcrumb(index) {
+            if (index === 0) {
+                this.currentPath = [];
+            } else {
+                this.currentPath = this.currentPath.slice(0, index);
+            }
+            this.renderContent();
+            this.scrollToTop();
+            
+            if (this.currentPath.length === 0) {
+                this.elements.container.style.display = 'grid';
+            }
+        }
+    
+        toggleFavorite(problemName) {
+            if (this.favorites.has(problemName)) {
+                this.favorites.delete(problemName);
+            } else {
+                this.favorites.add(problemName);
+            }
+            
+            // Update localStorage
+            localStorage.setItem('favorites', JSON.stringify([...this.favorites]));
+            
+            // Update UI
+            const favoriteButtons = document.querySelectorAll('.favorite-btn');
+            favoriteButtons.forEach(btn => {
+                if (btn.onclick && btn.onclick.toString().includes(problemName)) {
+                    btn.classList.toggle('favorited', this.favorites.has(problemName));
+                }
+            });
+            
+            // Refresh view if currently showing favorites
+            if (this.currentFilter === 'favorites') {
+                this.renderContent();
+            }
+            
+            // Show feedback
+            this.showNotification(
+                this.favorites.has(problemName) 
+                    ? `Added "${problemName}" to favorites!` 
+                    : `Removed "${problemName}" from favorites!`
+            );
+        }
+    
+        copyCode() {
+            const codeBlock = document.getElementById('codeBlock');
+            if (codeBlock) {
+                navigator.clipboard.writeText(codeBlock.textContent).then(() => {
+                    this.showNotification('Code copied to clipboard!');
+                }).catch(err => {
+                    console.error('Failed to copy code:', err);
+                    this.showNotification('Failed to copy code', 'error');
+                });
+            }
+        }
+    
+        showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.innerHTML = `
+                <div class="notification-content">
+                    <span class="notification-icon">${type === 'success' ? '✅' : '❌'}</span>
+                    <span class="notification-message">${message}</span>
+                </div>
+            `;
+            
+            // Add notification styles
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--error)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 10px;
+                box-shadow: var(--shadow-lg);
+                z-index: 10000;
+                animation: slideInRight 0.3s ease-out;
+                max-width: 300px;
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove notification after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease-in';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
+    
+        renderNoResults() {
+            this.elements.container.innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">🔍</div>
+                    <h3>No results found</h3>
+                    <p>Try adjusting your search terms or filters.</p>
+                </div>
+            `;
+        }
+    
+        formatDate(dateString) {
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+    
+        scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    
+        // Keyboard navigation
+        handleKeyboardNavigation(e) {
+            if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                e.preventDefault();
+                const cards = document.querySelectorAll('.card');
+                const currentIndex = Array.from(cards).findIndex(card => card.classList.contains('focused'));
+                
+                let newIndex;
+                if (e.key === 'ArrowUp') {
+                    newIndex = currentIndex > 0 ? currentIndex - 1 : cards.length - 1;
+                } else {
+                    newIndex = currentIndex < cards.length - 1 ? currentIndex + 1 : 0;
+                }
+                
+                cards.forEach(card => card.classList.remove('focused'));
+                if (cards[newIndex]) {
+                    cards[newIndex].classList.add('focused');
+                    cards[newIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            } else if (e.key === 'Enter') {
+                const focusedCard = document.querySelector('.card.focused');
+                if (focusedCard) {
+                    focusedCard.click();
+                }
+            }
+        }
+    
+        // Initialize keyboard navigation
+        initKeyboardNavigation() {
+            document.addEventListener('keydown', (e) => {
+                if (e.target.tagName === 'INPUT') return;
+                this.handleKeyboardNavigation(e);
+            });
+        }
+    
+        // Performance optimization: Debounced search
+        debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+    
+        // Enhanced search with debouncing
+        setupDebouncedSearch() {
+            const debouncedSearch = this.debounce((searchTerm) => {
+                this.searchTerm = searchTerm.toLowerCase();
+                this.renderContent();
+            }, 300);
+    
+            this.elements.searchInput.addEventListener('input', (e) => {
+                debouncedSearch(e.target.value);
+            });
+        }
+    
+        // Add CSS animations for notifications
+        addNotificationStyles() {
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                
+                @keyframes slideOutRight {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+                
+                .notification-content {
+                    display: flex;
+                    align-items: center;
+                    gap: 0.5rem;
+                }
+                
+                .notification-icon {
+                    font-size: 1.2rem;
+                }
+                
+                .card.focused {
+                    border-color: var(--primary);
+                    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.3);
+                }
+                
+                .language-tag {
+                    background: rgba(20, 184, 166, 0.2);
+                    color: var(--accent);
+                    padding: 0.2rem 0.6rem;
+                    border-radius: 8px;
+                    font-size: 0.8rem;
+                    border: 1px solid rgba(20, 184, 166, 0.3);
+                    margin-right: 0.5rem;
+                    margin-bottom: 0.5rem;
+                    display: inline-block;
+                }
+                
+                .solution-languages {
+                    margin-top: 1rem;
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+                
+                .difficulty-distribution {
+                    margin-top: 1rem;
+                }
+                
+                .difficulty-stats {
+                    display: flex;
+                    gap: 1rem;
+                    font-size: 0.9rem;
+                }
+                
+                .stat-item {
+                    color: var(--gray);
+                }
+                
+                .problem-description {
+                    margin-bottom: 2rem;
+                    padding: 1.5rem;
+                    background: rgba(255, 255, 255, 0.05);
+                    border-radius: 15px;
+                    border: 1px solid rgba(255, 255, 255, 0.1);
+                }
+                
+                .problem-description p {
+                    margin-bottom: 1rem;
+                    line-height: 1.6;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+    }
+    
+    // Initialize the application
+    let codeMaster;
+    
+    document.addEventListener('DOMContentLoaded', () => {
+        codeMaster = new CodeMasterPro();
+        codeMaster.addNotificationStyles();
+        codeMaster.initKeyboardNavigation();
+        codeMaster.setupDebouncedSearch();
+        
+        // Initialize highlight.js
+        if (typeof hljs !== 'undefined') {
+            hljs.highlightAll();
+        }
+        
+        console.log('CodeMaster Pro initialized successfully! 🚀');
+        console.log('Keyboard shortcuts:');
+        console.log('- Ctrl+/ : Focus search');
+        console.log('- Escape : Go back');
+        console.log('- Arrow keys : Navigate cards');
+        console.log('- Enter : Select focused card');
+    });
+</script>
+</body>
 </html>
