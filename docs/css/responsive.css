@@ -1,0 +1,56 @@
+/* responsive.css - Media Queries and Mobile Styles */
+
+/* Mobile and tablet responsive styles */
+@media (max-width: 768px) {
+    /* Container adjustments */
+    .container {
+      padding: 0 15px;
+    }
+  
+    /* Header responsive styles */
+    .logo {
+      font-size: 2rem;
+    }
+  
+    /* Stats bar mobile layout */
+    .stats-bar {
+      gap: 1rem;
+    }
+  
+    .stat-item {
+      padding: 0.8rem 1.5rem;
+    }
+  
+    /* Filter buttons mobile layout */
+    .filters-row {
+      gap: 0.5rem;
+    }
+  
+    .filter-btn {
+      padding: 0.6rem 1rem;
+      font-size: 0.8rem;
+    }
+  
+    /* Card mobile styles */
+    .card {
+      padding: 1.5rem;
+    }
+  
+    .list-card {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    /* Code viewer mobile styles */
+    .code-header {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+  
+    pre {
+      padding: 1rem;
+      font-size: 0.85rem;
+    }
+  }
