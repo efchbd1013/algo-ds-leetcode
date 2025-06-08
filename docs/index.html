@@ -217,8 +217,7 @@
         margin-bottom: 2rem;
       }
 
-      .filter-btn,
-      .sort-btn {
+      .filter-btn {
         padding: 0.8rem 1.5rem;
         border: 2px solid rgba(255, 255, 255, 0.2);
         border-radius: 20px;
@@ -230,15 +229,13 @@
         font-weight: 500;
       }
 
-      .filter-btn:hover,
-      .sort-btn:hover {
+      .filter-btn:hover {
         border-color: var(--primary);
         background: rgba(99, 102, 241, 0.2);
         transform: translateY(-2px);
       }
 
-      .filter-btn.active,
-      .sort-btn.active {
+      .filter-btn.active {
         background: var(--gradient);
         border-color: var(--primary);
         box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
@@ -393,32 +390,6 @@
         margin-bottom: 0.5rem;
       }
 
-      .difficulty-badge {
-        padding: 0.3rem 0.8rem;
-        border-radius: 12px;
-        font-size: 0.8rem;
-        font-weight: 600;
-        text-transform: uppercase;
-      }
-
-      .difficulty-easy {
-        background: rgba(16, 185, 129, 0.2);
-        color: var(--success);
-        border: 1px solid var(--success);
-      }
-
-      .difficulty-medium {
-        background: rgba(245, 158, 11, 0.2);
-        color: var(--warning);
-        border: 1px solid var(--warning);
-      }
-
-      .difficulty-hard {
-        background: rgba(239, 68, 68, 0.2);
-        color: var(--error);
-        border: 1px solid var(--error);
-      }
-
       .card-meta {
         display: flex;
         gap: 1rem;
@@ -459,7 +430,7 @@
         flex: 1;
       }
 
-      .list-card .difficulty-badge {
+      .list-card {
         flex-shrink: 0;
       }
 
@@ -606,8 +577,7 @@
           gap: 0.5rem;
         }
 
-        .filter-btn,
-        .sort-btn {
+        .filter-btn {
           padding: 0.6rem 1rem;
           font-size: 0.8rem;
         }
@@ -691,20 +661,7 @@
           Advanced LeetCode Solutions Platform by efrat-dev
         </div>
 
-        <div class="stats-bar" id="statsBar">
-          <div class="stat-item">
-            <div class="stat-number" id="totalSolutions">0</div>
-            <div class="stat-label">Solutions</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number" id="totalProblems">0</div>
-            <div class="stat-label">Problems</div>
-          </div>
-          <div class="stat-item">
-            <div class="stat-number" id="completionRate">0%</div>
-            <div class="stat-label">Completion</div>
-          </div>
-        </div>
+        <div class="stats-bar" id="statsBar"></div>
       </header>
 
       <div class="controls-section">
@@ -719,21 +676,9 @@
 
         <div class="filters-row">
           <button class="filter-btn active" data-filter="all">All</button>
-          <button class="filter-btn" data-filter="easy">Easy</button>
-          <button class="filter-btn" data-filter="medium">Medium</button>
-          <button class="filter-btn" data-filter="hard">Hard</button>
           <button class="filter-btn" data-filter="favorites">
             ★ Favorites
           </button>
-        </div>
-
-        <div class="filters-row">
-          <button class="sort-btn active" data-sort="name">Sort by Name</button>
-          <button class="sort-btn" data-sort="difficulty">
-            Sort by Difficulty
-          </button>
-          <button class="sort-btn" data-sort="recent">Recently Added</button>
-          <button class="sort-btn" data-sort="popular">Most Popular</button>
         </div>
 
         <div class="view-toggle">
@@ -771,7 +716,6 @@
           );
           this.currentView = "grid";
           this.currentFilter = "all";
-          this.currentSort = "name";
           this.searchQuery = "";
           this.problemData = new Map();
 
@@ -789,9 +733,6 @@
             backBtn: document.getElementById("backBtn"),
             breadcrumb: document.getElementById("breadcrumb"),
             statsBar: document.getElementById("statsBar"),
-            totalSolutions: document.getElementById("totalSolutions"),
-            totalProblems: document.getElementById("totalProblems"),
-            completionRate: document.getElementById("completionRate"),
           };
         }
 
@@ -810,18 +751,6 @@
                 .forEach((b) => b.classList.remove("active"));
               e.target.classList.add("active");
               this.currentFilter = e.target.dataset.filter;
-              this.applyFilters();
-            });
-          });
-
-          // Sort buttons
-          document.querySelectorAll(".sort-btn").forEach((btn) => {
-            btn.addEventListener("click", (e) => {
-              document
-                .querySelectorAll(".sort-btn")
-                .forEach((b) => b.classList.remove("active"));
-              e.target.classList.add("active");
-              this.currentSort = e.target.dataset.sort;
               this.applyFilters();
             });
           });
@@ -907,21 +836,6 @@
         }
 
         generateProblemData() {
-          // Generate rich metadata for each problem
-          const difficulties = ["easy", "medium", "hard"];
-          const topics = [
-            "Array",
-            "String",
-            "Hash Table",
-            "Dynamic Programming",
-            "Tree",
-            "Graph",
-            "Sorting",
-            "Binary Search",
-            "Two Pointers",
-            "Sliding Window",
-          ];
-
           this.allPaths.forEach((path) => {
             if (path.endsWith(".cs")) {
               const name = path.split("/").pop().replace(".cs", "");
@@ -929,14 +843,6 @@
 
               this.problemData.set(path, {
                 name: this.formatProblemName(name),
-                difficulty:
-                  difficulties[Math.floor(Math.random() * difficulties.length)],
-                topics: this.getRandomTopics(topics, 2, 4),
-                timeComplexity: this.getRandomComplexity(),
-                spaceComplexity: this.getRandomComplexity(),
-                acceptance: Math.floor(Math.random() * 60) + 20,
-                frequency: Math.floor(Math.random() * 100),
-                lastModified: this.getRandomDate(),
                 description: this.generateDescription(name),
               });
             }
@@ -956,32 +862,6 @@
             .trim();
         }
 
-        getRandomTopics(topics, min, max) {
-          const count = Math.floor(Math.random() * (max - min + 1)) + min;
-          const shuffled = [...topics].sort(() => 0.5 - Math.random());
-          return shuffled.slice(0, count);
-        }
-
-        getRandomComplexity() {
-          const complexities = [
-            "O(1)",
-            "O(log n)",
-            "O(n)",
-            "O(n log n)",
-            "O(n²)",
-            "O(2^n)",
-          ];
-          return complexities[Math.floor(Math.random() * complexities.length)];
-        }
-
-        getRandomDate() {
-          const start = new Date(2023, 0, 1);
-          const end = new Date();
-          return new Date(
-            start.getTime() + Math.random() * (end.getTime() - start.getTime())
-          );
-        }
-
         generateDescription(name) {
           const descriptions = [
             "A challenging algorithmic problem that tests your understanding of data structures.",
@@ -997,13 +877,6 @@
           const totalFiles = this.allPaths.filter((p) =>
             p.endsWith(".cs")
           ).length;
-          this.elements.totalSolutions.textContent = totalFiles;
-          this.elements.totalProblems.textContent = totalFiles;
-          this.elements.completionRate.textContent = "100%";
-
-          // Animate numbers
-          this.animateNumber(this.elements.totalSolutions, 0, totalFiles, 1000);
-          this.animateNumber(this.elements.totalProblems, 0, totalFiles, 1200);
         }
 
         animateNumber(element, start, end, duration) {
@@ -1032,40 +905,11 @@
             });
           }
 
-          // Apply difficulty filter
           if (this.currentFilter !== "all") {
             if (this.currentFilter === "favorites") {
               paths = paths.filter((path) => this.favorites.has(path));
-            } else {
-              paths = paths.filter((path) => {
-                const data = this.problemData.get(path);
-                return data && data.difficulty === this.currentFilter;
-              });
             }
           }
-
-          // Apply sorting
-          paths.sort((a, b) => {
-            const dataA = this.problemData.get(a);
-            const dataB = this.problemData.get(b);
-
-            switch (this.currentSort) {
-              case "name":
-                return a.localeCompare(b);
-              case "difficulty":
-                const diffOrder = { easy: 1, medium: 2, hard: 3 };
-                return (
-                  (diffOrder[dataA?.difficulty] || 0) -
-                  (diffOrder[dataB?.difficulty] || 0)
-                );
-              case "recent":
-                return (dataB?.lastModified || 0) - (dataA?.lastModified || 0);
-              case "popular":
-                return (dataB?.frequency || 0) - (dataA?.frequency || 0);
-              default:
-                return 0;
-            }
-          });
 
           this.filteredPaths = paths;
           this.renderResults(
@@ -1133,18 +977,8 @@
                     <div class="card-header">
                         <div>
                             <div class="card-title">${name}</div>
-                            <div class="card-meta">
-                                <span>⏱ ${data.timeComplexity}</span>
-                                <span>💾 ${data.spaceComplexity}</span>
-                                <span>✅ ${data.acceptance}%</span>
-                            </div>
                         </div>
                         <div style="display: flex; gap: 0.5rem; align-items: center;">
-                            <div class="difficulty-badge difficulty-${
-                              data.difficulty
-                            }">
-                                ${data.difficulty}
-                            </div>
                             <button class="favorite-btn ${
                               this.favorites.has(path) ? "favorited" : ""
                             }" 
@@ -1155,11 +989,6 @@
                         </div>
                     </div>
                     <div class="card-description">${data.description}</div>
-                    <div class="card-tags">
-                        ${data.topics
-                          .map((topic) => `<span class="tag">${topic}</span>`)
-                          .join("")}
-                    </div>
                 `;
         }
 
@@ -1344,20 +1173,6 @@
                     <div class="code-header slide-in">
                         <div>
                             <div class="code-title">${fileName}</div>
-                            ${
-                              data
-                                ? `
-                                <div class="card-meta" style="margin-top: 0.5rem;">
-                                    <span>⏱ ${data.timeComplexity}</span>
-                                    <span>💾 ${data.spaceComplexity}</span>
-                                    <span>✅ ${data.acceptance}%</span>
-                                    <div class="difficulty-badge difficulty-${data.difficulty}" style="margin-left: 1rem;">
-                                        ${data.difficulty}
-                                    </div>
-                                </div>
-                            `
-                                : ""
-                            }
                         </div>
                         <div class="code-actions">
                             <button class="action-btn tooltip" onclick="platform.copyCode()" data-tooltip="Copy code">
@@ -1377,19 +1192,6 @@
                             </button>
                         </div>
                     </div>
-                    ${
-                      data && data.topics
-                        ? `
-                        <div class="card-tags" style="margin-bottom: 1.5rem;">
-                            ${data.topics
-                              .map(
-                                (topic) => `<span class="tag">${topic}</span>`
-                              )
-                              .join("")}
-                        </div>
-                    `
-                        : ""
-                    }
                     <pre class="fade-in"><code class="language-csharp">${this.escapeHtml(
                       code
                     )}</code></pre>
