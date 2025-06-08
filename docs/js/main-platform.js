@@ -1,16 +1,16 @@
 /**
  * main-platform.js - Main Platform Class and Coordination
- * 
+ *
  * This is the main orchestrator class that coordinates all other managers
  * and handles the primary application logic and state management.
  */
 
-import { CONFIG, DEFAULTS } from './config.js';
-import { UIManager } from './ui-manager.js';
-import { DataManager } from './data-manager.js';
-import { NavigationManager } from './navigation-manager.js';
-import { EventManager } from './event-manager.js';
-import { downloadFile, getSubTree } from './utils.js';
+import { CONFIG, DEFAULTS } from "./config.js";
+import { UIManager } from "./ui-manager.js";
+import { DataManager } from "./data-manager.js";
+import { NavigationManager } from "./navigation-manager.js";
+import { EventManager } from "./event-manager.js";
+import { downloadFile, getSubTree } from "./utils.js";
 
 export class LeetCodePlatform {
   constructor() {
@@ -65,11 +65,25 @@ export class LeetCodePlatform {
    * Applies current filters and renders results
    */
   applyFilters() {
-    const filteredPaths = this.dataManager.filterPaths(this.searchQuery, this.currentFilter);
-    this.filteredPaths = filteredPaths;
-    
-    const title = this.searchQuery ? "Search Results" : "Explore Solutions";
-    this.renderResults(filteredPaths, title);
+    // If there is a search – display all the results
+    if (this.searchQuery) {
+      const filteredPaths = this.dataManager.filterPaths(
+        this.searchQuery,
+        this.currentFilter
+      );
+      this.filteredPaths = filteredPaths;
+      this.renderResults(filteredPaths, "Search Results");
+    } else {
+      // If there is no search – display only the current level
+      if (this.navigationManager.isViewingLevel()) {
+        const currentState = this.navigationManager.getCurrentState();
+        this.renderLevel(currentState.level, currentState.title);
+      } else {
+        // Displays the root level of the tree
+        const rootLevel = this.dataManager.getFullTree();
+        this.renderLevel(rootLevel, "Explore Solutions");
+      }
+    }
   }
 
   /**
@@ -99,11 +113,14 @@ export class LeetCodePlatform {
     paths.forEach((path, index) => {
       const data = this.dataManager.getProblemData(path);
       const isFile = path.endsWith(CONFIG.FILE_TYPES.CODE_EXTENSION);
-      const displayName = path.split("/").pop().replace(CONFIG.FILE_TYPES.CODE_EXTENSION, "");
-      
+      const displayName = path
+        .split("/")
+        .pop()
+        .replace(CONFIG.FILE_TYPES.CODE_EXTENSION, "");
+
       const onClick = this.eventManager.createCardClickHandler(
-        path, 
-        isFile, 
+        path,
+        isFile,
         displayName
       );
 
@@ -128,7 +145,9 @@ export class LeetCodePlatform {
   renderLevel(level, title) {
     this.uiManager.setTitle(title);
     this.uiManager.clearContent();
-    this.uiManager.updateBreadcrumb(this.navigationManager.getBreadcrumbPath(title));
+    this.uiManager.updateBreadcrumb(
+      this.navigationManager.getBreadcrumbPath(title)
+    );
     this.uiManager.toggleBackButton(this.navigationManager.hasHistory());
 
     const items = Object.keys(level);
@@ -183,7 +202,7 @@ export class LeetCodePlatform {
       title: this.uiManager.elements.pathTitle.textContent,
       filter: this.currentFilter,
       search: this.searchQuery,
-      view: this.currentView
+      view: this.currentView,
     };
 
     const subtree = this.navigationManager.navigateToFolder(
@@ -203,7 +222,7 @@ export class LeetCodePlatform {
    */
   navigateBack() {
     const prevState = this.navigationManager.navigateBack();
-    
+
     if (prevState) {
       if (Array.isArray(prevState.level)) {
         // Restore search results view
@@ -242,9 +261,14 @@ export class LeetCodePlatform {
       this.uiManager.showCodeLoading();
       const code = await this.dataManager.loadFile(path);
       const data = this.dataManager.getProblemData(path);
-      
+
       this.uiManager.elements.container.innerHTML = "";
-      this.uiManager.renderCodeViewer(path, code, data, this.dataManager.getFavorites());
+      this.uiManager.renderCodeViewer(
+        path,
+        code,
+        data,
+        this.dataManager.getFavorites()
+      );
       this.uiManager.toggleBackButton(true);
       this.eventManager.updateEventHandlers();
     } catch (error) {
@@ -259,7 +283,7 @@ export class LeetCodePlatform {
    */
   toggleFavorite(path) {
     const newStatus = this.dataManager.toggleFavorite(path);
-    
+
     // Update the UI
     if (this.currentFilter === "favorites") {
       this.applyFilters();
@@ -268,7 +292,9 @@ export class LeetCodePlatform {
     }
 
     // Show notification
-    const message = newStatus ? "Added to favorites!" : "Removed from favorites!";
+    const message = newStatus
+      ? "Added to favorites!"
+      : "Removed from favorites!";
     this.uiManager.showNotification(message, "success");
   }
 
@@ -281,7 +307,10 @@ export class LeetCodePlatform {
       navigator.clipboard
         .writeText(codeElement.textContent)
         .then(() => {
-          this.uiManager.showNotification("Code copied to clipboard!", "success");
+          this.uiManager.showNotification(
+            "Code copied to clipboard!",
+            "success"
+          );
         })
         .catch(() => {
           this.uiManager.showNotification("Failed to copy code", "error");
