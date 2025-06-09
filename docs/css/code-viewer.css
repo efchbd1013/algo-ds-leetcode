@@ -1,0 +1,60 @@
+/* code-viewer.css - Code Display and Syntax Highlighting */
+
+/* Code viewer container */
+#codeViewer {
+    background: var(--dark);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-top: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+  }
+  
+  /* Code viewer header */
+  .code-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .code-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+  }
+  
+  /* Code action buttons */
+  .code-actions {
+    display: flex;
+    gap: 1rem;
+  }
+  
+  .action-btn {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+  }
+  
+  .action-btn:hover {
+    background: var(--primary);
+    border-color: var(--primary);
+  }
+  
+  /* Code block styling */
+  pre {
+    background: var(--dark-light) !important;
+    border-radius: 15px;
+    padding: 2rem;
+    overflow-x: auto;
+    line-height: 1.6;
+    font-size: 0.95rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }

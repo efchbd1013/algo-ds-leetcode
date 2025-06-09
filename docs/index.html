@@ -2,27 +2,66 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>LeetCode Solutions – efrat-dev</title>
-    <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CodeMaster Pro - LeetCode Solutions Platform</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
     />
+    <link rel="stylesheet" href="./css/main.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-    <script>
-      hljs.highlightAll();
-    </script>
   </head>
   <body>
-    <h1>LeetCode Solutions</h1>
-    <h2 id="pathTitle">Click to view solutions</h2>
-    <button id="backBtn">⬅ Back</button>
+    <div class="floating-shapes">
+      <div class="shape"></div>
+      <div class="shape"></div>
+      <div class="shape"></div>
+      <div class="shape"></div>
+    </div>
 
-        <!-- Search Box -->
-        <input type="text" id="searchInput" placeholder="Search for a solution..." />
+    <div class="container">
+      <header>
+        <div class="logo">CodeMaster Pro</div>
+        <div class="subtitle">
+          Advanced LeetCode Solutions Platform by efrat-dev
+        </div>
 
-    <div id="container"></div>
-    <div id="codeViewer"></div>
-    <script src="script.js"></script>
-  </body>
+        <div class="stats-bar" id="statsBar"></div>
+      </header>
+
+      <div class="controls-section">
+        <div class="search-container">
+          <div class="search-icon">🔍</div>
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search solutions, algorithms, data structures..."
+          />
+        </div>
+
+        <div class="filters-row">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="favorites">
+            ★ Favorites
+          </button>
+        </div>
+
+        <div class="view-toggle">
+          <button class="view-btn active" data-view="grid">⊞ Grid</button>
+          <button class="view-btn" data-view="list">☰ List</button>
+        </div>
+      </div>
+
+      <div class="breadcrumb" id="breadcrumb"></div>
+
+      <button id="backBtn" style="display: none">← Back</button>
+
+      <h2 id="pathTitle">Explore Solutions</h2>
+
+      <div id="container" class="grid-view"></div>
+
+      <div id="codeViewer"></div>
+    </div>
+    <script type="module" src="./js/app.js"></script>
+</body>
 </html>

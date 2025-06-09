@@ -1,0 +1,12 @@
+/* main.css - Master CSS File with Imports */
+
+/* Import all component stylesheets */
+
+@import url('./base.css');        /* Reset, variables, and base styles */
+@import url('./animations.css');  /* All animations and keyframes */
+@import url('./header.css');      /* Header, logo, stats, and navigation */
+@import url('./controls.css');    /* Search, filters, and control buttons */
+@import url('./cards.css');       /* Card components and layout */
+@import url('./code-viewer.css'); /* Code display and syntax highlighting */
+@import url('./utilities.css');   /* Utility classes and helper styles */
+@import url('./responsive.css');  /* Media queries and mobile styles */
