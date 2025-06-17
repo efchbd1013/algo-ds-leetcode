@@ -1,7 +1,12 @@
-# 📘 Algo-DS-LeetCode
+# 📘 Leetcode Solutions Hub
 
-🎯 A curated collection of my solutions to LeetCode problems, organized by topic and difficulty level.  
-💡 Includes clean, well-documented code and detailed explanations — perfect for revision and interview prep!
+🎯 **A web-based interactive platform** showcasing my structured LeetCode solutions — fully searchable, categorized by topic and difficulty.  
+💡 Includes clean, well-documented code and in-browser explanations — perfect for daily practice and interview prep.
+
+---
+
+## 🌐 Live Demo  
+👉 [Visit the Platform](https://efrat-dev.github.io/leetcode-solutions-hub/)
 
 ---
 
