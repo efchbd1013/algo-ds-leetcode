@@ -34,8 +34,8 @@ CodeMaster Pro is an advanced, interactive platform for exploring and managing L
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/efrat-dev/codemaster-pro.git
-   cd codemaster-pro
+   git clone https://github.com/efrat-dev/leetcode-solutions-hub.git
+   cd leetcode-solutions-hub
    ```
 
 2. **Open the Project in a Browser**
