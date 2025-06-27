@@ -23,6 +23,20 @@ CodeMaster Pro follows a **modular architecture pattern** with clear separation 
 └── utils.js              # Utility functions and helpers
 ```
 
+## 📄 Function Reference
+
+For a detailed breakdown of the functions and methods implemented in each JavaScript module, please refer to the API documentation:
+
+👉 [View API Details (`docs/js/API.md`)](./API.md)
+
+This file includes:
+- Method signatures and expected parameters
+- Return types and behavior
+- Internal logic summaries
+- Cross-module usage references
+
+> Use this resource if you want to better understand how each part of the system communicates, or if you're extending the app and need to locate a specific utility or handler.
+
 ## 🔄 Data Flow Architecture
 
 ```
@@ -241,3 +255,9 @@ if (!element) {
 ---
 
 This architecture provides a solid foundation for a maintainable, performant, and extensible application while keeping the codebase organized and easy to understand.
+
+## 📄 API Documentation
+
+For a comprehensive overview of the functions and methods used throughout the codebase, please see the detailed API documentation:
+
+👉 [API Documentation (`docs/js/API.md`)](./API.md)
